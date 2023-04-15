@@ -57,30 +57,9 @@ BEGIN
   
   INSERT INTO sale (barcode, quantity, datetime, price, margin)
   VALUES ('ABC123', need_amount_original, NOW(), sale_price, ROUND(need_amount_original * sale_price - final_sum, 2));
-  
-  SET @profit = ROUND(need_amount_original * sale_price - final_sum, 2);
-
-  IF (SELECT COUNT(*) FROM daily_profit_table WHERE date = CURDATE()) > 0 THEN
-    UPDATE daily_profit_table SET profit = profit + @profit WHERE date = CURDATE();
-  ELSE
-    INSERT INTO daily_profit_table (date, profit) VALUES (CURDATE(), @profit);
-  END IF;
-  
-  
-  SET @profit = ROUND(need_amount_original * sale_price - final_sum, 2);
-  SET @year = YEAR(CURDATE());
-  SET @month = MONTH(CURDATE());
-  
-  IF (SELECT COUNT(*) FROM monthly_profit_table WHERE year = @year AND month = @month) > 0 THEN
-      UPDATE monthly_profit_table SET profit = profit + @profit WHERE year = @year AND month = @month;
-  ELSE
-      INSERT INTO monthly_profit_table (year, month, profit) VALUES (@year, @month, @profit);
-  END IF;
-
 
 END $$
 
 DELIMITER ;
-
 
 CALL UpdateSoldAmount(100, 10); -- python variables
