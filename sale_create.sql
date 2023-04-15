@@ -48,6 +48,8 @@ BEGIN
       UPDATE supply
         SET sold_amount = curr_sold_amount
         WHERE barcode = curr_barcode;
+      INSERT INTO supply_sale (supply_id, sale_id, supply_quantity)
+        VALUES (@supply_id, @sale_id, curr_sold_amount);
       LEAVE update_loop;
     END IF;
 
@@ -56,8 +58,7 @@ BEGIN
       WHERE barcode = curr_barcode;
 
     INSERT INTO supply_sale (supply_id, sale_id, supply_quantity)
-      VALUES (@supply_id, @sale_id, curr_sold_amount)
-      
+      VALUES (@supply_id, @sale_id, curr_sold_amount);
 
   END LOOP update_loop;
 
